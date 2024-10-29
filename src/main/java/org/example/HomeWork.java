@@ -1,6 +1,7 @@
 package org.example;
 
 
+import java.util.ArrayList;
 import java.util.List;
 
 public class HomeWork {
@@ -11,7 +12,25 @@ public class HomeWork {
      * <a href="https://acm.timus.ru/problem.aspx?space=1&num=1439">https://acm.timus.ru/problem.aspx?space=1&num=1439</a>
      */
     public List<Integer> getOriginalDoorNumbers(int maxDoors, List<Action> actionList) {
-        return null;
+        var doors = new Treap<Integer>();
+        var result = new ArrayList<Integer>();
+        for (int i = 1; i <= maxDoors; i++) {
+            doors.add(i);
+        }
+
+        var removedCount = 0;
+        for (Action action : actionList) {
+            var doorNumber = action.doorNumber;
+            var node = doors.getSubSet(removedCount + doorNumber--).get(doorNumber);
+            if (action.isLook()) {
+                result.add(node.key);
+            } else {
+                doors.remove(node.key);
+                removedCount++;
+            }
+        }
+
+        return result;
     }
 
     /**
@@ -28,7 +47,22 @@ public class HomeWork {
      * _ <b>4</b> => 4
      */
     public List<Integer> getLeaveOrder(int maxUnits, int leaveInterval) {
-        return null;
+        var result = new ArrayList<Integer>();
+        var solders = new Treap<Integer>();
+        for (int i = 1; i < maxUnits + 1; i++){
+            solders.add(i);
+        }
+
+        var order = leaveInterval - 1;
+        for (int i = 0; i < maxUnits; i++, order += leaveInterval - 1) {
+            var inorder = solders.inorder();
+            order = order % inorder.size();
+            var value = inorder.get(order);
+            result.add(value);
+            solders.remove(value);
+        }
+
+        return result;
     }
 
 }
